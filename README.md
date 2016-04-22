@@ -46,15 +46,17 @@ Please make sure that all software components are installed properly.
 
 Clone the git repository from:
 
-    :::bash
-    git clone https://github.com/trifonnt/ankor-todo-tutorial.git
+```bash
+git clone https://github.com/trifonnt/ankor-todo-tutorial.git
+```
 
 To get the first tutorial step, checkout branch `server-step-0`.
 This is also how you may switch between tutorial steps later:
 
-    :::bash
-    cd ankor-todo
-    git checkout -f server-step-0
+```bash
+cd ankor-todo
+git checkout -f server-step-0
+```
 
 Now you got a maven project based on these modules:
 
