@@ -7,11 +7,12 @@ In this step we'll be using the [`@ChangeListener`][1] annotation to react to ch
 
 It's time to add some additional properties:
 
-    :::java
-    private Boolean clearButtonVisibility = false;
-    private Integer itemsComplete = 0;
-    private String itemsCompleteText;
-    private Boolean toggleAll = false;
+```java
+private Boolean clearButtonVisibility = false;
+private Integer itemsComplete = 0;
+private String itemsCompleteText;
+private Boolean toggleAll = false;
+```
 
 * `itemsComplete` is the number of todos that have been completed.
 * `itemsCompleteText` is the text inside the clear button.
@@ -25,33 +26,36 @@ It's time to add some additional properties:
 
 Let's set the correct initial state of our view model text properties (Remove the old dummy values):
 
-    :::java
-    public TaskListModel(Ref modelRef, TaskRepository taskRepository) {
-        AnkorPatterns.initViewModel(this, modelRef);
-        this.modelRef = modelRef;
-        this.taskRepository = taskRepository;
+```java
+public TaskListModel(Ref modelRef, TaskRepository taskRepository) {
+    AnkorPatterns.initViewModel(this, modelRef);
+    this.modelRef = modelRef;
+    this.taskRepository = taskRepository;
 
-        this.itemsLeftText = itemsLeftText(itemsLeft);
-        this.itemsCompleteText = itemsCompleteText(itemsComplete);
-    }
+    this.itemsLeftText = itemsLeftText(itemsLeft);
+    this.itemsCompleteText = itemsCompleteText(itemsComplete);
+}
+```
 
 The `itemsLeftText` and `itemsCompleteText` helper methods are:
 
-    :::java
-    private String itemsLeftText(int itemsLeft) {
-        return (itemsLeft == 1) ? "item left" : "items left";
-    }
+```java
+private String itemsLeftText(int itemsLeft) {
+    return (itemsLeft == 1) ? "item left" : "items left";
+}
 
-    private String itemsCompleteText(int itemsComplete) {
-        return String.format("Clear completed (%d)", itemsComplete);
-    }
+private String itemsCompleteText(int itemsComplete) {
+    return String.format("Clear completed (%d)", itemsComplete);
+}
+```
 
 #### Methods as Change Listeners
 
 What we want to have is a method that updates the `itemsLeftText` based on the number of tasks:
 
-    :::java
-    modelRef.appendPath("itemsLeftText").setValue(itemsLeftText(itemsLeft));
+```java
+modelRef.appendPath("itemsLeftText").setValue(itemsLeftText(itemsLeft));
+```
 
 These statements should be called whenever the `itemsLeft` property changes.
 We can get this behaviour with a change listener.
@@ -69,35 +73,38 @@ In our chase we have `"root.model.itemsLeft"`.
 This will do the trick.
 It will also set `toggleAll`, since it depends on `itemsLeft` as well:
 
-    :::java
-    @ChangeListener(pattern = "root.model.itemsLeft")
-    public void itemsLeftChanged() {
-        modelRef.appendPath("itemsLeftText").setValue(itemsLeftText(itemsLeft));
-        modelRef.appendPath("toggleAll").setValue(itemsLeft == 0);
-    }
+```java
+@ChangeListener(pattern = "root.model.itemsLeft")
+public void itemsLeftChanged() {
+    modelRef.appendPath("itemsLeftText").setValue(itemsLeftText(itemsLeft));
+    modelRef.appendPath("toggleAll").setValue(itemsLeft == 0);
+}
+```
 
 ##### Updating the clear button
 
 We need another change listener to keep the clear button updated:
 
-    :::java
-    @ChangeListener(pattern = "root.model.itemsComplete")
-    public void updateClearButton() {
-        modelRef.appendPath("clearButtonVisibility").setValue(itemsComplete != 0);
-        modelRef.appendPath("itemsCompleteText").setValue(itemsCompleteText(itemsComplete));
-    }
+```java
+@ChangeListener(pattern = "root.model.itemsComplete")
+public void updateClearButton() {
+    modelRef.appendPath("clearButtonVisibility").setValue(itemsComplete != 0);
+    modelRef.appendPath("itemsCompleteText").setValue(itemsCompleteText(itemsComplete));
+}
+```
 
 ##### Changing the footer visibility
 
 Change listeners can also listen to multiple patterns:
 
-    :::java
-    @ChangeListener(pattern = {
-            "root.model.itemsLeft",
-            "root.model.itemsComplete"})
-    public void updateFooterVisibility() {
-        modelRef.appendPath("footerVisibility").setValue(itemsLeft != 0 || itemsComplete != 0);
-    }
+```java
+@ChangeListener(pattern = {
+        "root.model.itemsLeft",
+        "root.model.itemsComplete"})
+public void updateFooterVisibility() {
+    modelRef.appendPath("footerVisibility").setValue(itemsLeft != 0 || itemsComplete != 0);
+}
+```
 
 ##### Keeping the item counters updated
 
@@ -105,22 +112,24 @@ As you can see all these listeners depended on `itemsLeft` and `itemsComplete`.
 But these properties are currently not consistent with the repository.
 To fix this we define a helper method that sets these properties based on the number of entries in the repository.
 
-    :::java
-    private void updateItemsCount() {
-        modelRef.appendPath("itemsLeft").setValue(taskRepository.fetchActiveTasks().size());
-        modelRef.appendPath("itemsComplete").setValue(taskRepository.fetchCompletedTasks().size());
-    }
+```java
+private void updateItemsCount() {
+    modelRef.appendPath("itemsLeft").setValue(taskRepository.fetchActiveTasks().size());
+    modelRef.appendPath("itemsComplete").setValue(taskRepository.fetchCompletedTasks().size());
+}
+```
 
 Inside our `newTask` and `deleteTask` methods we can now replace:
 
-    :::java
-    int itemsLeft = taskRepository.fetchActiveTasks().size();
-    modelRef.appendPath("itemsLeft").setValue(itemsLeft);
+```java
+int itemsLeft = taskRepository.fetchActiveTasks().size();
+modelRef.appendPath("itemsLeft").setValue(itemsLeft);
+```
 
 with:
 
-    :::java
-    updateItemsCount();
-
+```java
+updateItemsCount();
+```
 
 [1]: http://ankor.io/static/javadoc/apidocs-0.4/at/irian/ankor/annotation/ChangeListener.html
