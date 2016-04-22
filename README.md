@@ -56,20 +56,22 @@ Please make sure that all software components are installed properly.
 
 Clone the git repository from:
 
-    :::bash
+```bash
     git clone https://github.com/ankor-io/ankor-todo-tutorial.git
+```
 
 The folder ankor-todo is empty. To get the first tutorial step, checkout branch `fx-step-0`.
 This is how you may switch between tutorial steps later.
 
-    :::bash
-    cd ankor-todo
-    git checkout -f fx-step-0
+```bash
+cd ankor-todo
+git checkout -f fx-step-0
+```
 
 Now you got a maven project based on these modules:
 
     todo-fx        : Todo Sample - JavaFX Client
-    todo-js-client : Todo Sample - JavaFX Client
+    todo-js-client : Todo Sample - JavaScript Client
     todo-server    : Todo Sample - Ankor Application Implementation
     todo-servlet   : Todo Sample - Spring Boot Server Starter
 
