@@ -47,7 +47,7 @@ Please make sure that all software components are installed properly.
 Clone the git repository from:
 
     :::bash
-    git clone https://github.com/ankor-io/ankor-todo-tutorial.git
+    git clone https://github.com/trifonnt/ankor-todo-tutorial.git
 
 To get the first tutorial step, checkout branch `server-step-0`.
 This is also how you may switch between tutorial steps later:
