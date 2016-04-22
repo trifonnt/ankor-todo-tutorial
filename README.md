@@ -16,11 +16,12 @@ The footer should only be visible if there is at least one todo either completed
 The footer is split in two parts.
 Its ids are `footerTop` and `footerBottom`, so we'll need those two fields in our controller:
 
-    :::java
-    @FXML
-    public Node footerTop;
-    @FXML
-    public Node footerBottom;
+```java
+@FXML
+public Node footerTop;
+@FXML
+public Node footerBottom;
+```
 
 ![fx-step-3-1](http://ankor.io/static/images/tutorial/fx-step-3-1.png)
 
@@ -31,32 +32,34 @@ a Ankor `Ref`, which obviously can't be bound to any JavaFX properties.
 
 As we've seen previously our todo application's view model is structured like this:
 
-    :::javascript
-    "root": {
-        "model": {
-            "tasks": [],
-            "filter": "all",
-            "itemsLeft": 0,
-            "itemsLeftText": "items left",
-            "footerVisibility": false,
-            "itemsComplete": 0,
-            "itemsCompleteText": "Clear completed (0)",
-            "clearButtonVisibility": false,
-            "toggleAll": true,
-            "filterAllSelected": true,
-            "filterActiveSelected": false,
-            "filterCompletedSelected": false
-        }
+```javascript
+"root": {
+    "model": {
+        "tasks": [],
+        "filter": "all",
+        "itemsLeft": 0,
+        "itemsLeftText": "items left",
+        "footerVisibility": false,
+        "itemsComplete": 0,
+        "itemsCompleteText": "Clear completed (0)",
+        "clearButtonVisibility": false,
+        "toggleAll": true,
+        "filterAllSelected": true,
+        "filterActiveSelected": false,
+        "filterCompletedSelected": false
     }
+}
+```
 
 We have a `Ref` to the `root` property right now, but we want access to the `model` and its various key-value pairs,
 which hold the actual state of the UI.
 To navigate the tree we can "append" a path to a `Ref`, yielding a new `Ref` to the specified child node.
 
-    :::java
-    FxRef rootRef = App.refFactory().ref("root");
-    FxRef modelRef = rootRef.appendPath("model");
-    FxRef footerVisibilityRef = modelRef.appendPath("footerVisibility");
+```java
+FxRef rootRef = App.refFactory().ref("root");
+FxRef modelRef = rootRef.appendPath("model");
+FxRef footerVisibilityRef = modelRef.appendPath("footerVisibility");
+```
 
 <div class="alert alert-info">
   <strong>Note:</strong> We are using type <code>FxRef</code> instead of <code>Ref</code> here.
@@ -71,10 +74,11 @@ Ankor provides a subtype of `Ref` called [`FxRef`][3], which has a method `fxPro
 As the name suggests it returns a object of type [`Property`][4]. It can be used like any other JavaFX property,
 including bindings:
 
-    :::java
-    Property<Boolean> footerVisibilityProperty = footerVisibilityRef.fxProperty();
-    footerTop.visibleProperty().bind(footerVisibilityProperty);
-    footerBottom.visibleProperty().bind(footerVisibilityProperty);
+```java
+Property<Boolean> footerVisibilityProperty = footerVisibilityRef.fxProperty();
+footerTop.visibleProperty().bind(footerVisibilityProperty);
+footerBottom.visibleProperty().bind(footerVisibilityProperty);
+```
 
 In the case of our `footerVisibilityRef` we are expecting a `Property` of type `Boolean`.
 We then bind this property to the `visibleProperty` of the two footer nodes.
@@ -86,27 +90,30 @@ The number should be bound to the label `todoCountNum`
 and the text ("items left" or "item left") should be bound to the label `todoCountText`.
 Again, they are predefined in [`tasks.fxml`][2], so to reference them all we need is:
 
-    :::java
-    @FXML
-    public Label todoCountNum;
-    @FXML
-    public Label todoCountText;
+```java
+@FXML
+public Label todoCountNum;
+@FXML
+public Label todoCountText;
+```
 
 In our change listener method we can now bind the properties.
 Binding the text is rather straight forward. However, note that we need to call `fxProperty` with a type parameter,
 as it can't be inferred from the declaration in this context.
 
-    :::java
-    todoCountText.textProperty().bind(modelRef.appendPath("itemsLeftText").<String>fxProperty());
+```java
+todoCountText.textProperty().bind(modelRef.appendPath("itemsLeftText").<String>fxProperty());
+```
 
 Binding the number is a bit trickier as this property is of type `Number`, while the label is expecting a `String`.
 To work around this we can use a bidirectional binding, which allows us to specify a converter.
 Alternatively we could have written our server to provide `itemsLeft` as a string.
 
-    :::java
-    todoCountNum.textProperty().bindBidirectional(
-            modelRef.appendPath("itemsLeft").<Number>fxProperty(),
-            new NumberStringConverter());
+```java
+todoCountNum.textProperty().bindBidirectional(
+        modelRef.appendPath("itemsLeft").<Number>fxProperty(),
+        new NumberStringConverter());
+```
 
 This is how bindings are done in JavaFX. Unfortunately we still won't be able to see anything,
 since nothing will change until we add some todos to the list.
