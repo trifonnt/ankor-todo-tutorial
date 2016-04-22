@@ -17,24 +17,27 @@ You can skip this section if you went through any of the client tutorials.
 
 For reference, the code for firing an Action on the JavaFX client looks like this:
 
-    :::java
-    Map<String, Object> params = new HashMap<>();
-    params.put("title", title);
-    modelRef.fire(new Action("newTask", params));
+```java
+Map<String, Object> params = new HashMap<>();
+params.put("title", title);
+modelRef.fire(new Action("newTask", params));
+```
 
 The API looks similar on other platforms.
 Anyway, the server will receive JSON in this form:
 
-    {
-        "modelId": "...",
-        "property": "root.model",
-        "action": {
-            "name": "newTask",
-            "params": {
-                "title": "test"
-            }
+```java
+{
+    "modelId": "...",
+    "property": "root.model",
+    "action": {
+        "name": "newTask",
+        "params": {
+            "title": "test"
         }
     }
+}
+```
 
 As you can see, an `Action` always has a name.
 Optionally it can have parameters.
@@ -51,11 +54,12 @@ However there are a few things to consider:
 
 Let's see how this looks for the `newTask` Action:
 
-    :::java
-    @ActionListener
-    public void newTask(@Param("title") final String title) {
-        // ...
-    }
+```java
+@ActionListener
+public void newTask(@Param("title") final String title) {
+    // ...
+}
+```
 
 Note the `@Param` annotation on the `title` parameter.
 
@@ -63,18 +67,20 @@ Note the `@Param` annotation on the `title` parameter.
 
 In the body of the method we create a new task and add it to the task repository.
 
-    :::java
-    Task task = new Task(title);
-    taskRepository.saveTask(task);
+```java
+Task task = new Task(title);
+taskRepository.saveTask(task);
+```
 
 Now we want to update the `itemsLeft` property to reflect the actual number of tasks in the repository.
 Simply setting the property will not trigger any changes in the UI though.
 
-    :::java
-    int itemsLeft = taskRepository.fetchActiveTasks().size();
+```java
+int itemsLeft = taskRepository.fetchActiveTasks().size();
 
-    // Ankor will not notice this
-    this.itemsLeft = itemsLeft;
+// Ankor will not notice this
+this.itemsLeft = itemsLeft;
+```
 
 ##### Using Refs to set properties
 
@@ -86,9 +92,10 @@ This path leads from the `ModelRoot` to a property.
 The full path to `itemsLeft` would be `"root.model.itemsLeft"`.  
 Since we already have a `Ref` for to `"root.model"` we can simply "append" `"itemsLeft"`.
 
-    :::java
-    int itemsLeft = taskRepository.fetchActiveTasks().size();
-    modelRef.appendPath("itemsLeft").setValue(itemsLeft);
+```java
+int itemsLeft = taskRepository.fetchActiveTasks().size();
+modelRef.appendPath("itemsLeft").setValue(itemsLeft);
+```
 
 This will send a change event to the client and trigger any events there.
 It will also update the local variable, so that `(this.itemsLeft == itemsLeft)` evaluates to `true`.
