@@ -25,10 +25,11 @@ which might be the best option for debugging.
 After you have started the server, point your browser to [`http://localhost:8080/test.html`](http://localhost:8080/test.html).
 The page should look something like this:
 
-    :::text
-    Server is up and running!
-    Connecting to ws://localhost:8080/websocket/ankor/6684908722527325 ...
-    WebSocket connection established
+```text
+Server is up and running!
+Connecting to ws://localhost:8080/websocket/ankor/6684908722527325 ...
+WebSocket connection established
+```
 
 #### Connecting a client
 
