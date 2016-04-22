@@ -26,16 +26,17 @@ The `model` will be another view model that contains the state of the task list.
 
 Here is how `ModelRoot` should look like:
 
-    :::java
-    public class ModelRoot {
-        private TaskListModel model;
+```java
+public class ModelRoot {
+	private TaskListModel model;
 
-        public ModelRoot(Ref rootRef) {
-            AnkorPatterns.initViewModel(this, rootRef);
-            this.model = new TaskListModel(rootRef.appendPath("model"), new TaskRepository());
-        }
-    }
-    
+	public ModelRoot(Ref rootRef) {
+		AnkorPatterns.initViewModel(this, rootRef);
+		this.model = new TaskListModel(rootRef.appendPath("model"), new TaskRepository());
+	}
+}
+```
+
 #### Constructor parameters
 
 The constructor takes a Ankor [`Ref`][2] as parameters.
@@ -70,15 +71,15 @@ So a path of `"root"` refers to the `ModelRoot`, while `"root.model"` will refer
 It's important that you add getters and setters for all properties that should be exposed to the client.
 Ideally your IDE can do that for you.
 
-    :::java
-    public TaskListModel getModel() {
-        return model;
-    }
+```java
+public TaskListModel getModel() {
+	return model;
+}
 
-    public void setModel(TaskListModel model) {
-        this.model = model;
-    }
-
+public void setModel(TaskListModel model) {
+	this.model = model;
+}
+```
 
 [1]: https://github.com/ankor-io/ankor-todo-tutorial/blob/server-step-2/todo-server/src/main/java/io/ankor/tutorial/model/Task.java
 [2]: http://ankor.io/static/javadoc/apidocs-0.4/at/irian/ankor/ref/Ref.html
