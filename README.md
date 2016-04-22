@@ -13,43 +13,44 @@ This is a `AnkorClient` implementation for JavaFX that connects to a WebSocket e
 
 Open `App.java` and add the following lines:
 
-    :::java
-    public class App extends Application {
-        private AnkorClient client;
-    
-        public static void main(String[] args) {
-            launch(args);
-        }
-    
-        public App() throws Exception {
-            client = WebSocketFxClient.builder()
-                    .withApplicationName("Todo FX Client")
-                    .withModelName("root")
-                    .withConnectParam("todoListId", "collaborationTest")
-                    .withServer("ws://localhost:8080/websocket/ankor")
-                    .build();
-        }
-    
-        @Override
-        public void start(Stage stage) throws Exception {
-            client.start();
-    
-            stage.setTitle("Ankor JavaFX Todo Sample");
-            Pane myPane = FXMLLoader.load(getClass().getClassLoader().getResource("tasks.fxml"));
-    
-            Scene myScene = new Scene(myPane);
-            myScene.getStylesheets().add("style.css");
-    
-            stage.setScene(myScene);
-            stage.show();
-        }
-    
-        @Override
-        public void stop() throws Exception {
-            client.stop();
-            super.stop();
-        }
+```java
+public class App extends Application {
+    private AnkorClient client;
+
+    public static void main(String[] args) {
+        launch(args);
     }
+
+    public App() throws Exception {
+        client = WebSocketFxClient.builder()
+                .withApplicationName("Todo FX Client")
+                .withModelName("root")
+                .withConnectParam("todoListId", "collaborationTest")
+                .withServer("ws://localhost:8080/websocket/ankor")
+                .build();
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        client.start();
+
+        stage.setTitle("Ankor JavaFX Todo Sample");
+        Pane myPane = FXMLLoader.load(getClass().getClassLoader().getResource("tasks.fxml"));
+
+        Scene myScene = new Scene(myPane);
+        myScene.getStylesheets().add("style.css");
+
+        stage.setScene(myScene);
+        stage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        client.stop();
+        super.stop();
+    }
+}
+```
 
 This assumes that you have an Ankor server with WebSocket endpoint running on your local machine at port 8080.
 If you've already done the [Server Tutorial][servertutorial] you can use that one you implemented yourself.
