@@ -9,11 +9,12 @@ The reason for this bug is in the `newTask` method.
 When we first wrote it we didn't have a filter.
 We can fix it with an additional if statement:
 
-    :::java
-    if (!filter.equals(Filter.completed)) {
-        TaskModel model = new TaskModel(task);
-        tasksRef().add(model);
-    }
+```java
+if (!filter.equals(Filter.completed)) {
+    TaskModel model = new TaskModel(task);
+    tasksRef().add(model);
+}
+```
 
 #### Advanced pattern syntax
 
@@ -24,13 +25,14 @@ At the moment nothing happens when we complete a todo.
 This should update the item counters and reload the list entries.
 (We reload the list because a completed todo should not remain in the active list and vice versa).
 
-    :::java
-    @ChangeListener(pattern = {
-            "root.model.tasks.*.completed"})
-    public void saveTask() {
-        updateItemsCount();
-        reloadTasks(filter);
-    }
+```java
+@ChangeListener(pattern = {
+        "root.model.tasks.*.completed"})
+public void saveTask() {
+    updateItemsCount();
+    reloadTasks(filter);
+}
+```
 
 Here we use `*` in the pattern to indicate that we do not care which task's `completed` property has changed.
 The method should be called when any todo has changed.
@@ -56,17 +58,18 @@ When the method is called the `Ref` will point to the property specified by the 
 
 In case of a list we put parenthesis around the index to get a `Ref` to the entry at that index:
 
-    :::java
-    @ChangeListener(pattern = {
-            "root.model.tasks.(*).completed",
-            "root.model.tasks.(*).title"})
-    public void saveTask(Ref ref) {
-        Task model = ref.getValue();
-        taskRepository.saveTask(model);
+```java
+@ChangeListener(pattern = {
+        "root.model.tasks.(*).completed",
+        "root.model.tasks.(*).title"})
+public void saveTask(Ref ref) {
+    Task model = ref.getValue();
+    taskRepository.saveTask(model);
 
-        updateItemsCount();
-        reloadTasks(filter);
-    }
+    updateItemsCount();
+    reloadTasks(filter);
+}
+```
 
 This completes the Ankor server tutorial.
 You can now follow any of the [client tutorials][1] and let them connect to this server.
