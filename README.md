@@ -59,7 +59,7 @@ This is also how you may switch between tutorial steps later:
 Now you got a maven project based on these modules:
 
     todo-fx        : Todo Sample - JavaFX Client
-    todo-js-client : Todo Sample - JavaFX Client
+    todo-js-client : Todo Sample - JavaScript Client
     todo-server    : Todo Sample - Ankor Application Implementation
     todo-servlet   : Todo Sample - Spring Boot Server Starter
 
