@@ -7,12 +7,13 @@ Next, open [`TaskListController.java`][1]. This is a JavaFX controller. A contro
 
 Inside `initialize` we have to take care of two things:
 
-    :::java
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        Ref rootRef = refFactory().ref("root");
-        rootRef.fire(new Action("init"));
-    }
+```java
+@Override
+public void initialize(URL url, ResourceBundle resourceBundle) {
+    Ref rootRef = refFactory().ref("root");
+    rootRef.fire(new Action("init"));
+}
+```
 
 The first statement will return a `Ref`, the second one will send an `Action` to the server.
 
@@ -37,24 +38,25 @@ In this case we use it to tell the Ankor server to set up a new view model for u
 The server will process the action and return a response containing the initial state of the application.
 The data is JSON encoded and will look like this:
 
-    :::javascript
-    {
-        "senderId": "ankor-servlet-server",
-        "modelId": "...",
-        "messageId": "ankor-servlet-server#1",
-        "property": "root",
-        "change": {
-            "type": "value",
-            "value": {
-                "model": {
-                    "tasks": [],
-                    "filter": "all",
-                    "itemsLeft": 0,
-                    ...
-                }
+```javascript
+{
+    "senderId": "ankor-servlet-server",
+    "modelId": "...",
+    "messageId": "ankor-servlet-server#1",
+    "property": "root",
+    "change": {
+        "type": "value",
+        "value": {
+            "model": {
+                "tasks": [],
+                "filter": "all",
+                "itemsLeft": 0,
+                ...
             }
         }
     }
+}
+```
 
 `model` is the name of the node that has changed. Its children are the names and values of the properties
 that have changed. These are an empty array of todos, the number of items that are left, and so on.
@@ -71,17 +73,19 @@ a lot of boilerplate code for adding individual event listeners.
 
 We add this line to our initialize method:
 
-    :::java
-    FXControllerSupport.init(this, rootRef);
+```java
+FXControllerSupport.init(this, rootRef);
+```
 
 We can now create our own initialize method, the one that will be called when the response from the server returns
 after the `init` action has been fired:
 
-    :::java
-    @ChangeListener(pattern = "root")
-    public void myInit() {
-        // TODO
-    }
+```java
+@ChangeListener(pattern = "root")
+public void myInit() {
+    // TODO
+}
+```
 
 The `ChangeListener` annotation says that we want to watch for changes on a property.
 The `pattern` is the path to the property that we want to listen for, in this case it's the `root`.
