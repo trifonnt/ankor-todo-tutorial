@@ -2,7 +2,7 @@
 
 #### Using a AnkorClient
 
-A Ankor JavaFX application is just a regular JavaFX application. 
+An Ankor JavaFX application is just a regular JavaFX application. 
 It extends the [`Application`][3] class, calls `launch` in the main method and has `start` and `stop` methods.
 
 Ankor comes into play in the constructor. 
