@@ -13,16 +13,17 @@ What we need in our view model is a separate list of todos that represents the c
 This list will change when the user selects a different filter.
 We can use a simple `ArrayList` for this:
 
-    :::java
-    private List<TaskModel> tasks = new ArrayList<>();
+```java
+private List<TaskModel> tasks = new ArrayList<>();
 
-    public List<TaskModel> getTasks() {
-        return tasks;
-    }
+public List<TaskModel> getTasks() {
+    return tasks;
+}
 
-    public void setTasks(List<TaskModel> tasks) {
-        this.tasks = tasks;
-    }
+public void setTasks(List<TaskModel> tasks) {
+    this.tasks = tasks;
+}
+```
 
 
 As you will notice we haven't defined a `TaskModel` yet.
@@ -37,59 +38,63 @@ This field is only relevant in the UI and should not be part of the `Task` class
 
 So we let the `TaskModel` class extend `Task` and we define an additional `editing` property:
 
-    :::java
-    public class TaskModel extends Task {
-        private boolean editing = false;
+```java
+public class TaskModel extends Task {
+    private boolean editing = false;
 
-        public TaskModel(Task task) {
-            super(task);
-        }
-
-        public boolean isEditing() {
-            return editing;
-        }
-
-        public void setEditing(boolean editing) {
-            this.editing = editing;
-        }
+    public TaskModel(Task task) {
+        super(task);
     }
+
+    public boolean isEditing() {
+        return editing;
+    }
+
+    public void setEditing(boolean editing) {
+        this.editing = editing;
+    }
+}
+```
 
 Since we will create and compare `TaskModel`s on the fly they should have `equals` and `hashCode` methods.
 You can let your IDE create them for you. You can also use these:
 
-    :::java
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+```java
+@Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
 
-        TaskModel taskModel = (TaskModel) o;
+    TaskModel taskModel = (TaskModel) o;
 
-        return editing == taskModel.editing;
-    }
+    return editing == taskModel.editing;
+}
 
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (editing ? 1 : 0);
-        return result;
-    }
+@Override
+public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (editing ? 1 : 0);
+    return result;
+}
+```
 
 #### Updating the list
 
 With this in place we can add to our `newTask` method:
 
-    :::java
-    TaskModel model = new TaskModel(task);
-    tasksRef().add(model);
-    
+```java
+TaskModel model = new TaskModel(task);
+tasksRef().add(model);
+```
+
 `tasksRef()` is a helper method that returns the `CollectionRef` to our tasks property:
 
-    :::java
-    private CollectionRef tasksRef() {
-        return modelRef.appendPath("tasks").toCollectionRef();
-    }
+```java
+private CollectionRef tasksRef() {
+    return modelRef.appendPath("tasks").toCollectionRef();
+}
+```
 
 As we've seen before, changing properties directly will not be noticed by Ankor.
 Instead we've used `Ref`s.
@@ -101,16 +106,17 @@ Doing so will only send changes to the client.
 
 Now that we know about `CollectionRef`s we can also implement the `deleteTask` method:
 
-    :::java
-    @ActionListener
-    public void deleteTask(@Param("index") final int index) {
-        Task task = tasks.get(index);
-        taskRepository.deleteTask(task);
+```java
+@ActionListener
+public void deleteTask(@Param("index") final int index) {
+    Task task = tasks.get(index);
+    taskRepository.deleteTask(task);
 
-        int itemsLeft = taskRepository.fetchActiveTasks().size();
-        modelRef.appendPath("itemsLeft").setValue(itemsLeft);
+    int itemsLeft = taskRepository.fetchActiveTasks().size();
+    modelRef.appendPath("itemsLeft").setValue(itemsLeft);
 
-        tasksRef().delete(index);
-    }
+    tasksRef().delete(index);
+}
+```
 
 [1]: http://ankor.io/static/javadoc/apidocs-0.4/at/irian/ankor/ref/CollectionRef.html
